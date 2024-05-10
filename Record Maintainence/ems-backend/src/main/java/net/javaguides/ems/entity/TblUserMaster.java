@@ -17,16 +17,16 @@ public class TblUserMaster {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID")
-    private long UserID;
+    private long userId;
 
     @Column(name = "UserName", nullable = false)
-    private String UserName;
+    private String userName;
 
     @Column(name = "MobileNumber", nullable = false)
-    private String MobileNumber;
+    private String mobileNumber;
 
     @Column(name = "Password", nullable = false)
-    private String Password;
+    private String password;
 
     @Transient
     private String confirmPassword;
