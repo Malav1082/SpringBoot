@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { forgotPassword } from '../services/UserService';
 
 const ForgotPasswordComponent = () => {
     const [username, setUsername] = useState('');

@@ -20,7 +20,7 @@ public class TblUserMaster {
     private long userId;
 
     @Column(name = "UserName", nullable = false)
-    private String userName;
+    private String name;
 
     @Column(name = "MobileNumber", nullable = false)
     private String mobileNumber;

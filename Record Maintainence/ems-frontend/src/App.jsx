@@ -1,4 +1,4 @@
-import './App.css'
+// import './App.css'
 // import FooterComponent from './components/FooterComponent'
 // import HeaderComponent from './components/HeaderComponent'
 // import EmployeeComponent from './components/EmployeeComponent'
@@ -14,16 +14,16 @@ import './App.css'
 //       <HeaderComponent/>
 //         <Routes>
 //           {/* //http://localhost:3000 */}
-//           {/* <Route path='/' element = { <ListEmployeeComponent/> }></Route> */}
-//           <Route path='/' element = { <LoginComponent/> }></Route>
+//           <Route path='/' element = { <ListEmployeeComponent/> }></Route>
+//           {/* <Route path='/' element = { <LoginComponent/> }></Route> */}
 
 //           {/* Route to dashboard */}
-//           <Route path="/dashboard" element={<DashboardComponent />} /> 
+//           {/* <Route path="/dashboard" element={<DashboardComponent />} />  */}
 
 //           {/* //http://localhost:3000/employees */}
-//           {/* <Route path='/employees' element = { <ListEmployeeComponent/> }></Route> */}
+//           <Route path='/employees' element = { <ListEmployeeComponent/> }></Route>
 //           {/* //http://localhost:3000/add-employee */}
-//           {/* <Route path='/add-employee' element = { <EmployeeComponent/> }></Route> */}
+//           <Route path='/add-employee' element = { <EmployeeComponent/> }></Route>
 //         </Routes>
 //       <FooterComponent/>
 //       </BrowserRouter>
@@ -50,18 +50,10 @@ function App() {
       <Router>
         <HeaderComponent />
         <Routes>
-          {/* Route to login page */}
-          <Route path="/" element={<LoginComponent />} />
-
-          {/* Route to registration page */}
-          <Route path="/register" element={<RegisterComponent />} />
-
-          {/* Route to forgot password page */}
-          <Route path="/forgot-password" element={<ForgotPasswordComponent />} />
-
-          {/* Route to reset password page */}
-          <Route path="/reset-password" element={<ResetPasswordComponent />} />
-
+          <Route path="/" element={<LoginComponent />} exact/>
+          <Route path="/register" element={<RegisterComponent />} exact/>
+          <Route path="/forgot-password" element={<ForgotPasswordComponent />} exact/>
+          <Route path="/reset-password" element={<ResetPasswordComponent />} exact/>
           {/* Route to dashboard */}
           {/* <Route path="/dashboard" element={<DashboardComponent />} /> */}
         </Routes>

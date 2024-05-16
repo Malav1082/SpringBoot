@@ -1,55 +1,53 @@
 package net.javaguides.ems.controller;
 
 import lombok.AllArgsConstructor;
-import net.javaguides.ems.dto.TblUserMasterDto;
 import net.javaguides.ems.service.TblUserMasterService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import net.javaguides.ems.entity.TblUserMaster;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin("*")
-@AllArgsConstructor
 @RestController
-@RequestMapping("/api/users")
+//@CrossOrigin("*")
 public class TblUserMasterController {
-    private TblUserMasterService tblUserMasterService;
 
-    // Another POST method with a different mapping
-    @PostMapping("/add")
-    public ResponseEntity<TblUserMasterDto> createTblUserMasterAnother(@RequestBody TblUserMasterDto tblUserMasterDto) {
-        // Proceed with saving
-        TblUserMasterDto savedTblUserMaster = tblUserMasterService.createTblUserMaster(tblUserMasterDto);
-        return new ResponseEntity<>(savedTblUserMaster, HttpStatus.CREATED);
+    @Autowired
+    public TblUserMasterService tblUserMasterService;
+
+    @PostMapping("/register")
+    public String register(@RequestBody TblUserMaster tblUserMaster) {
+        if (tblUserMasterService.getUserByE(tblUserMaster) == null) {
+            System.out.println(tblUserMasterService.addUser(tblUserMaster));
+        } else {
+            System.out.println("Already Exists!");
+        }
+        return "register";
     }
 
-    //get employee by id
-    @GetMapping("{userId}")
-    public ResponseEntity<TblUserMasterDto> getTblUserMasterById(@PathVariable("userId") Long userId){
-        TblUserMasterDto tblUserMasterDto = tblUserMasterService.getTblUserMasterById(userId);
-        return ResponseEntity.ok(tblUserMasterDto);
+    // @PostMapping("/login")
+    // public String login(@RequestBody UserDto userDto) {
+    //   System.out.println("POSTED LOGIN" + userDto);
+    //   User user = this.modelMapper.map(userDto, User.class);
+    //   System.out.println(user);
+    //   return "login";
+    // }
+//    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/login")
+    public String login(@RequestBody TblUserMaster tblUserMaster) {
+        System.out.println("POSTED LOGIN" + tblUserMaster);
+        return "login";
     }
 
-    //get all employees
-    @GetMapping
-    public ResponseEntity<List<TblUserMasterDto>> getAllTblUserMasters(){
-        List<TblUserMasterDto> tblUserMasters = tblUserMasterService.getAllTblUserMasters();
-        return ResponseEntity.ok(tblUserMasters);
+    @GetMapping("/reset-password")
+    public String resetPassword() {
+        System.out.println("reset-password");
+        return "reset-password";
     }
 
-    //update employee
-    @PutMapping("{userId}")
-    public ResponseEntity<TblUserMasterDto> updateTblUserMaster(@PathVariable("userId") Long userId,
-                                                                @RequestBody TblUserMasterDto updatedTblUserMaster){
-        TblUserMasterDto tblUserMasterDto = tblUserMasterService.updateTblUserMaster(userId, updatedTblUserMaster);
-        return ResponseEntity.ok(tblUserMasterDto);
-    }
-
-    //delete employee
-    @DeleteMapping("{userId}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable("userId") Long userId){
-        tblUserMasterService.deleteTblUserMaster(userId);
-        return ResponseEntity.ok("User Deleted Successfully");
+    @GetMapping("/forgot-password")
+    public String forgotPassword() {
+        System.out.println("forgot-password");
+        return "forgot-password";
     }
 }

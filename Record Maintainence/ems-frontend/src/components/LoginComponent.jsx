@@ -1,45 +1,84 @@
-import React, { useState } from 'react';
-import { login } from '../services/UserService';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Container,
+  Form,
+  FormFeedback,
+  FormGroup,
+  Input,
+  Label,
+} from "reactstrap";
+import { postApi } from "../services/UserService";
+import { Link } from "react-router-dom";
+const Login = () => {
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
 
-const LoginComponent = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
-    const navigator = useNavigate();
+  const [user, setUser] = useState({});
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value });
+  };
 
-        try {
-            await login({ username, password });
-            navigator('/dashboard'); // Navigate to dashboard on successful login
-        } catch (error) {
-            setError('Invalid username or password');
-        }
+  const handleLogin = (e) => {
+    e.preventDefault();
+    // const res = axios.post(`${base_url}/login`, user).then(
+    //   (res) => {
+    //     console.log("res", res.data);
+    //     // toast.success("Welcome to the Employee Database Management System!");
+    //     toast.success("success", {
+    //       //   position: "top-center",
+    //     });
+    //   },
+    //   (error) => {
+    //     console.log(error);
+    //     toast.error(, {
+    //       //   position: "top-center",
+    //     });
+    //   }
+    // );
+    postApi("/login", user, "success", "Oops! Something went wrong.");
+  };
 
-        setLoading(false);
-    };
+  return (
+    <div>
+      <Container>
+        <Form method="post" onSubmit={handleLogin}>
+          <FormGroup>
+            <Label for="name">Name</Label>
+            <Input
+              type="text"
+              id="name"
+              name="name"
+              onChange={handleInputChange}
 
-    return (
-        <div className="container">
-            <h2 className='text-center'>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Username:</label>
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </div>
-                <button type="submit" disabled={loading}>Login</button>
-                {error && <div>{error}</div>}
-            </form>
-        </div>
-    );
+            />
+            <FormFeedback valid>Sweet! that name is available</FormFeedback>
+            {/* <FormText>Example help text that remains unchanged.</FormText> */}
+          </FormGroup>
+          <FormGroup>
+            <Label for="password">Password</Label>
+            <Input
+              type="password"
+              id="password"
+              name="password"
+              onChange={handleInputChange}
+            />
+            <FormFeedback>Oh noes! that name is already taken</FormFeedback>
+            {/* <FormText>Example help text that remains unchanged.</FormText> */}
+          </FormGroup>
+          <Button type="submit" color="primary" outline>
+            Login
+          </Button>
+          <Link className="btn btn-warning" to={"/register"}>
+            Register
+          </Link>
+        </Form>
+      </Container>
+    </div>
+  );
 };
 
-export default LoginComponent;
+export default Login;
