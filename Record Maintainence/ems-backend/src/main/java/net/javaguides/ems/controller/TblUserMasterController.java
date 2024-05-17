@@ -1,12 +1,12 @@
 package net.javaguides.ems.controller;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.databind.JsonNode;
 import net.javaguides.ems.service.TblUserMasterService;
 import net.javaguides.ems.entity.TblUserMaster;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 //@CrossOrigin("*")
@@ -16,38 +16,52 @@ public class TblUserMasterController {
     public TblUserMasterService tblUserMasterService;
 
     @PostMapping("/register")
-    public String register(@RequestBody TblUserMaster tblUserMaster) {
+    public ResponseEntity<?> register(@RequestBody TblUserMaster tblUserMaster) {
         if (tblUserMasterService.getUserByE(tblUserMaster) == null) {
-            System.out.println(tblUserMasterService.addUser(tblUserMaster));
+            TblUserMaster u = tblUserMasterService.addUser(tblUserMaster);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(u.getName() + " Registered Successfully");
         } else {
-            System.out.println("Already Exists!");
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("User Already Exists!");
         }
-        return "register";
     }
 
-    // @PostMapping("/login")
-    // public String login(@RequestBody UserDto userDto) {
-    //   System.out.println("POSTED LOGIN" + userDto);
-    //   User user = this.modelMapper.map(userDto, User.class);
-    //   System.out.println(user);
-    //   return "login";
-    // }
-//    @CrossOrigin(origins = "http://localhost:3000")
+    //    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/login")
-    public String login(@RequestBody TblUserMaster tblUserMaster) {
-        System.out.println("POSTED LOGIN" + tblUserMaster);
-        return "login";
+    public ResponseEntity<String> login(@RequestBody TblUserMaster tblUserMaster) {
+        TblUserMaster user = tblUserMasterService.getUserByEP(tblUserMaster.getName(), tblUserMaster.getPassword());
+        if (user != null) {
+            return ResponseEntity.ok("Welcome " + tblUserMaster.getName());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Credentials!");
+        }
     }
 
-    @GetMapping("/reset-password")
-    public String resetPassword() {
-        System.out.println("reset-password");
-        return "reset-password";
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody JsonNode userNewPass) {
+        String name = userNewPass.get("name").asText();
+        String oldPassword = userNewPass.get("password").asText();
+        String newPassword = userNewPass.get("new_password").asText();
+
+        if (tblUserMasterService.resetPassword(name, oldPassword, newPassword)) {
+            return ResponseEntity.status(HttpStatus.OK).body("Password Changed Successfully!");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Credentials!");
+        }
     }
 
-    @GetMapping("/forgot-password")
-    public String forgotPassword() {
-        System.out.println("forgot-password");
-        return "forgot-password";
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody JsonNode user) {
+        String name = user.get("name").asText();
+        String newPassword = user.get("new_password").asText();
+
+        if (tblUserMasterService.forgotPassword(name, newPassword)) {
+            return ResponseEntity.status(HttpStatus.OK).body("Password Changed Successfully!");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found!");
+        }
     }
 }

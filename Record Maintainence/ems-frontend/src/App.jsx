@@ -33,34 +33,28 @@
 
 // export default App
 
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginComponent from './components/LoginComponent';
-import RegisterComponent from './components/RegisterComponent';
-import ForgotPasswordComponent from './components/ForgotPasswordComponent';
-import ResetPasswordComponent from './components/ResetPasswordComponent';
-import HeaderComponent from './components/HeaderComponent';
-import FooterComponent from './components/FooterComponent';
-// import DashboardComponent from './components/DashboardComponent';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./components/LoginComponent";
+import Register from "./components/RegisterComponent";
+import ForgotPassword from "./components/ForgotPasswordComponent"; // You'll need to create this component
+import ResetPassword from "./components/ResetPasswordComponent"; // You'll need to create this component
+import Home from "./components/Home"; // Your home or landing page
 
-function App() {
-
+const App = () => {
   return (
-    <>
-      <Router>
-        <HeaderComponent />
-        <Routes>
-          <Route path="/" element={<LoginComponent />} exact/>
-          <Route path="/register" element={<RegisterComponent />} exact/>
-          <Route path="/forgot-password" element={<ForgotPasswordComponent />} exact/>
-          <Route path="/reset-password" element={<ResetPasswordComponent />} exact/>
-          {/* Route to dashboard */}
-          {/* <Route path="/dashboard" element={<DashboardComponent />} /> */}
-        </Routes>
-        <FooterComponent />
-      </Router>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Login />} /> {/* Default route */}
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
+

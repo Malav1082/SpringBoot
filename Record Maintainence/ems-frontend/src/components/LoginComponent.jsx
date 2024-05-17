@@ -1,83 +1,94 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Container,
-  Form,
-  FormFeedback,
-  FormGroup,
-  Input,
-  Label,
-} from "reactstrap";
+import { Button, Container, Form, FormGroup, Input, Label, Alert, Row, Col } from "reactstrap";
 import { postApi } from "../services/UserService";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 const Login = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     document.title = "Login";
   }, []);
 
   const [user, setUser] = useState({});
+  const [successAlert, setSuccessAlert] = useState(false);
+  const [errorAlert, setErrorAlert] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // const res = axios.post(`${base_url}/login`, user).then(
-    //   (res) => {
-    //     console.log("res", res.data);
-    //     // toast.success("Welcome to the Employee Database Management System!");
-    //     toast.success("success", {
-    //       //   position: "top-center",
-    //     });
-    //   },
-    //   (error) => {
-    //     console.log(error);
-    //     toast.error(, {
-    //       //   position: "top-center",
-    //     });
-    //   }
-    // );
-    postApi("/login", user, "success", "Oops! Something went wrong.");
+    try {
+      const response = await postApi("/login", user, "Login Successful!", "Invalid Credentials");
+      if (response && response.status === 200 && response.data.includes("Welcome")) {
+        setSuccessAlert(true);
+        setTimeout(() => {
+          setSuccessAlert(false);
+          navigate("/home");
+        }, 2000);
+      } else {
+        setErrorAlert(true);
+        setTimeout(() => setErrorAlert(false), 3000);
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      setErrorAlert(true);
+      setTimeout(() => setErrorAlert(false), 3000);
+    }
   };
 
   return (
-    <div>
-      <Container>
-        <Form method="post" onSubmit={handleLogin}>
-          <FormGroup>
-            <Label for="name">Name</Label>
-            <Input
-              type="text"
-              id="name"
-              name="name"
-              onChange={handleInputChange}
-
-            />
-            <FormFeedback valid>Sweet! that name is available</FormFeedback>
-            {/* <FormText>Example help text that remains unchanged.</FormText> */}
-          </FormGroup>
-          <FormGroup>
-            <Label for="password">Password</Label>
-            <Input
-              type="password"
-              id="password"
-              name="password"
-              onChange={handleInputChange}
-            />
-            <FormFeedback>Oh noes! that name is already taken</FormFeedback>
-            {/* <FormText>Example help text that remains unchanged.</FormText> */}
-          </FormGroup>
-          <Button type="submit" color="primary" outline>
-            Login
-          </Button>
-          <Link className="btn btn-warning" to={"/register"}>
-            Register
-          </Link>
-        </Form>
-      </Container>
-    </div>
+    <Container style={{ width: '40%', border: '1px solid #ccc', padding: '20px', borderRadius: '10px', marginTop: '7%' }}>
+      <h2 className="mt-4 mb-4" style={{textAlign: 'center'}}>Login</h2>
+      {successAlert && <Alert color="success">Login Successful!</Alert>}
+      {errorAlert && <Alert color="danger">Invalid User Name or Password</Alert>}
+      <Form onSubmit={handleLogin}>
+        <Row form>
+          <Col md={9}>
+            <FormGroup>
+              <Label for="name">User Name:</Label>
+              <Input type="text" id="name" name="name" onChange={handleInputChange} placeholder="Enter Your Name"/>
+            </FormGroup>
+          </Col>
+        </Row>
+        <Row form>
+          <Col md={9}>
+            <FormGroup>
+              <Label for="password">Password:</Label>
+              <Input
+                type="password" id="password" name="password" onChange={handleInputChange} placeholder="Enter Your Password"/>
+            </FormGroup>
+          </Col>
+        </Row>
+        <Row form className="mt-3">
+          <Col md={6}>
+            <Button type="submit" color="primary" outline className="w-100">
+              Login
+            </Button>
+          </Col>
+          <Col md={6}>
+            <Button color="secondary" outline className="w-100" onClick={() => navigate("/register")}>
+              Register
+            </Button>
+          </Col>
+        </Row>
+        <Row form className="mt-3">
+          <Col md={6}>
+            <Button color="warning" outline className="w-100" onClick={() => navigate("/forgot-password")}>
+              Forgot Password
+            </Button>
+          </Col>
+          <Col md={6}>
+            <Button color="info" outline className="w-100" onClick={() => navigate("/reset-password")}>
+              Reset Password
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    </Container>
   );
 };
 

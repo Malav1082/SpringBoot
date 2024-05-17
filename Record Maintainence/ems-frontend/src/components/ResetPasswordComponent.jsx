@@ -1,60 +1,114 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { Button, Container, Form, FormGroup, Input, Label, Alert } from "reactstrap";
+import { useNavigate } from "react-router-dom";
+import { postApi } from "../services/UserService";
 
-const ResetPasswordComponent = () => {
-    const [username, setUsername] = useState('');
-    const [oldPassword, setOldPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmNewPassword, setConfirmNewPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [message, setMessage] = useState('');
+const ResetPassword = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState({ name: "", password: "", new_password: "" });
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordConfirmed, setPasswordConfirmed] = useState(true);
+  const [successAlert, setSuccessAlert] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
+  useEffect(() => {
+    document.title = "Reset Password";
+  }, []);
 
-        try {
-            // Check if new passwords match
-            if (newPassword !== confirmNewPassword) {
-                throw new Error('New passwords do not match');
-            }
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value });
+  };
 
-            // Call reset password API
-            await resetPassword(username, oldPassword, newPassword);
-            setMessage('Password reset successfully');
-        } catch (error) {
-            setError(error.message);
-        }
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
+    setPasswordConfirmed(user.new_password === e.target.value);
+  };
 
-        setLoading(false);
-    };
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    if (user.new_password !== confirmPassword) {
+      setPasswordConfirmed(false);
+      return;
+    }
+    setPasswordConfirmed(true);
+    try {
+      await postApi("/reset-password", user, "Password reset successfully!", "Oops! Something went wrong.");
+      setSuccessAlert(true);
+      setTimeout(() => {
+        setSuccessAlert(false);
+        navigate("/login");
+      }, 2000);
+    } catch (error) {
+      console.error("Password Reset Error:", error);
+    }
+  };
 
-    return (
-        <div className="container">
-            <h2>Reset Password</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Username:</label>
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-                </div>
-                <div>
-                    <label>Old Password:</label>
-                    <input type="password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} />
-                </div>
-                <div>
-                    <label>New Password:</label>
-                    <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-                </div>
-                <div>
-                    <label>Confirm New Password:</label>
-                    <input type="password" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} />
-                </div>
-                <button type="submit" disabled={loading}>Reset Password</button>
-                {message && <div>{message}</div>}
-                {error && <div>{error}</div>}
-            </form>
+  return (
+    <Container className="mt-5">
+      <h2 className="mb-4">Reset Password</h2>
+      {successAlert && <Alert color="success">Password reset successfully!</Alert>}
+      <Form onSubmit={handleResetPassword}>
+        <FormGroup>
+          <Label for="name">UserName</Label>
+          <Input
+            type="text"
+            id="name"
+            name="name"
+            onChange={handleInputChange}
+            placeholder="Enter your username"
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label for="password">Old Password</Label>
+          <Input
+            type="password"
+            id="password"
+            name="password"
+            onChange={handleInputChange}
+            placeholder="Enter your old password"
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label for="new_password">New Password</Label>
+          <Input
+            type="password"
+            id="new_password"
+            name="new_password"
+            onChange={handleInputChange}
+            placeholder="Enter your new password"
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label for="confirmPassword">Confirm New Password</Label>
+          <Input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            onChange={handleConfirmPasswordChange}
+            placeholder="Confirm your new password"
+            invalid={!passwordConfirmed}
+            required
+          />
+          {!passwordConfirmed && <small className="text-danger">Passwords do not match</small>}
+        </FormGroup>
+        <div className="d-flex justify-content-between">
+          <Button type="submit" color="primary">
+            Reset Password
+          </Button>
+          <Button
+            type="button"
+            color="secondary"
+            onClick={() => navigate("/login")}
+          >
+            Back
+          </Button>
         </div>
-    );
+      </Form>
+    </Container>
+  );
 };
 
-export default ResetPasswordComponent;
+export default ResetPassword;

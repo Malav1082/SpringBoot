@@ -14,23 +14,19 @@ public class TblUserMasterService {
     @Autowired
     private TblUserMasterRepository tblUserMasterRepository;
 
-    public TblUserMaster addUser(TblUserMaster tblUserMaster){
+    public TblUserMaster addUser(TblUserMaster tblUserMaster) {
         return tblUserMasterRepository.save(tblUserMaster);
     }
 
-    public TblUserMaster getUserByE(TblUserMaster tblUserMaster){
+    public TblUserMaster getUserByE(TblUserMaster tblUserMaster) {
         return tblUserMasterRepository.findByName(tblUserMaster.getName());
     }
 
-    public TblUserMaster getUserByEP(TblUserMaster tblUserMaster){
+    public TblUserMaster getUserByEP(String name, String password) {
         TblUserMaster user = null;
 
         try {
-            user =
-                    this.tblUserMasterRepository.findByNameAndPassword(
-                            tblUserMaster.getName(),
-                            tblUserMaster.getPassword()
-                    );
+            user = this.tblUserMasterRepository.findByNameAndPassword(name, password);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,5 +40,33 @@ public class TblUserMasterService {
                         tblUserMaster.getPassword()
                 );
     }
-}
 
+    public boolean resetPassword(
+            String name,
+            String password,
+            String new_password
+    ) {
+        TblUserMaster u = this.tblUserMasterRepository.findByNameAndPassword(name, password);
+
+        if (u != null) {
+            u.setPassword(new_password);
+            tblUserMasterRepository.save(u);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean forgotPassword(String name, String new_password) {
+        TblUserMaster u = tblUserMasterRepository.findByName(name);
+
+        if (u != null) {
+            u.setPassword(new_password);
+            tblUserMasterRepository.save(u);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}

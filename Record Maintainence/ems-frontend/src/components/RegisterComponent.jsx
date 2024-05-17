@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
+import { Button, Container, Form, FormGroup, Input, Label, Alert } from "reactstrap";
 import { postApi } from "../services/UserService";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Register";
@@ -12,6 +12,8 @@ const Register = () => {
 
   const [user, setUser] = useState({});
   const [passwordConfirmed, setPasswordConfirmed] = useState(true);
+  const [successAlert, setSuccessAlert] = useState(false);
+  const [errorAlert, setErrorAlert] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -22,16 +24,16 @@ const Register = () => {
     e.preventDefault();
     if (passwordConfirmed) {
       try {
-        await postApi(
-          "/register",
-          user,
-          "Registered Successfully!",
-          "Oops! Something went wrong."
-        );
-        // Redirect to login page after successful registration
-        history.push("/login");
+        await postApi("/register", user, "Registered Successfully!", "Oops! Something went wrong.");
+        setSuccessAlert(true);
+        setTimeout(() => {
+          setSuccessAlert(false);
+          navigate("/login");
+        }, 2000);
       } catch (error) {
         console.error("Registration Error:", error);
+        setErrorAlert(true);
+        setTimeout(() => setErrorAlert(false), 3000);
       }
     } else {
       alert("Password not matched!");
@@ -41,6 +43,8 @@ const Register = () => {
   return (
     <Container>
       <h2 className="mt-4 mb-4">Register</h2>
+      {successAlert && <Alert color="success">Registered Successfully!</Alert>}
+      {errorAlert && <Alert color="danger">Oops! Something went wrong.</Alert>}
       <Form onSubmit={handleRegister}>
         <FormGroup>
           <Label for="name">Name</Label>
@@ -52,7 +56,6 @@ const Register = () => {
             placeholder="Enter your name"
           />
         </FormGroup>
-
         <FormGroup>
           <Label for="mobileNumber">Mobile Number</Label>
           <Input
@@ -63,7 +66,6 @@ const Register = () => {
             placeholder="Enter mobile number"
           />
         </FormGroup>
-
         <FormGroup>
           <Label for="password">Password</Label>
           <Input
@@ -74,7 +76,6 @@ const Register = () => {
             placeholder="Enter password"
           />
         </FormGroup>
-
         <FormGroup>
           <Label for="confirmPassword">Confirm Password</Label>
           <Input
@@ -87,11 +88,20 @@ const Register = () => {
             placeholder="Confirm your password"
             invalid={!passwordConfirmed}
           />
-          {!passwordConfirmed && <small className="text-danger">Passwords do not match</small>}
+          {!passwordConfirmed && (
+            <small className="text-danger">Passwords do not match</small>
+          )}
         </FormGroup>
-
         <Button type="submit" color="primary">
           Register
+        </Button>
+        <Button
+          type="button"
+          color="secondary"
+          className="ml-2"
+          onClick={() => navigate("/login")}
+        >
+          Back
         </Button>
       </Form>
     </Container>

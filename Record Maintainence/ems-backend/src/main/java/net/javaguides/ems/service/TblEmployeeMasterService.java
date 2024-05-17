@@ -5,9 +5,9 @@ import net.javaguides.ems.dto.TblEmployeeMasterDto;
 import java.util.List;
 
 public interface TblEmployeeMasterService {
-    TblEmployeeMasterDto createTblEmployeeMasterDto(TblEmployeeMasterDto tblEmployeeMasterDto);
-    TblEmployeeMasterDto getTblEmployeeMasterDtoById(Long empId);
-    List<TblEmployeeMasterDto> getAllTblEmployeeMasterDto();
-    TblEmployeeMasterDto updateTblEmployeeMasterDto(Long empId, TblEmployeeMasterDto updatedEmp);
-    void deleteTblEmployeeMasterDto(Long empId);
+    TblEmployeeMasterDto createTblEmployeeMaster(TblEmployeeMasterDto tblEmployeeMasterDto);
+    TblEmployeeMasterDto getTblEmployeeMasterById(Long empId);
+    List<TblEmployeeMasterDto> getAllTblEmployeeMaster();
+    TblEmployeeMasterDto updateTblEmployeeMaster(Long empId, TblEmployeeMasterDto updatedEmp);
+    void deleteTblEmployeeMaster(Long empId);
 }
