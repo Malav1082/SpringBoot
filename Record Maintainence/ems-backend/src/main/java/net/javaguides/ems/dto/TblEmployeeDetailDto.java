@@ -10,8 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TblEmployeeDetailDto {
-    private long empCode;
-    private long mastCode;
     private String addressLine1;
     private String addressLine2;
     private String city;

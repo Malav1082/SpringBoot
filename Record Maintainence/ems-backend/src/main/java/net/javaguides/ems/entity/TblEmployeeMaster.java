@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="TblEmployeeMaster")
+@Table(name = "TblEmployeeMaster")
 public class TblEmployeeMaster {
 
     @Id
@@ -44,4 +44,3 @@ public class TblEmployeeMaster {
     @Column(name = "Salary", nullable = false)
     private double salary;
 }
-

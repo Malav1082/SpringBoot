@@ -33,28 +33,51 @@
 
 // export default App
 
+import './App.css';
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Login from "./components/LoginComponent";
 import Register from "./components/RegisterComponent";
-import ForgotPassword from "./components/ForgotPasswordComponent"; // You'll need to create this component
-import ResetPassword from "./components/ResetPasswordComponent"; // You'll need to create this component
-import Home from "./components/Home"; // Your home or landing page
+import ForgotPassword from "./components/ForgotPasswordComponent";
+import ResetPassword from "./components/ResetPasswordComponent";
+import Home from "./components/Home";
+import Add from "./components/add";
+import Update from "./components/update";
+import FooterComponent from './components/FooterComponent';
+import HeaderComponent from './components/HeaderComponent';
 
 const App = () => {
   return (
     <Router>
+      <MainContent />
+    </Router>
+  );
+};
+
+const MainContent = () => {
+  const location = useLocation();
+
+  const showHeaderAndFooter = location.pathname === "/home" || location.pathname === "/add" || location.pathname.startsWith("/update");
+
+  return (
+    <>
+      {showHeaderAndFooter && <HeaderComponent />}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/add" element={<Add />} />
+        <Route path="/update/:empID" element={<Update />} />
         <Route path="/" element={<Login />} /> {/* Default route */}
       </Routes>
-    </Router>
+      {showHeaderAndFooter && <FooterComponent />}
+    </>
   );
 };
 
 export default App;
+
+
 

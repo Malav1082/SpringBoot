@@ -37,4 +37,13 @@ public class TblEmployeeDetail {
 
     @Column(name = "Country")
     private String country;
+
+    // Additional constructor without empCode and employeeMaster for mapping DTO to Entity
+    public TblEmployeeDetail(String addressLine1, String addressLine2, String city, String state, String country) {
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+    }
 }

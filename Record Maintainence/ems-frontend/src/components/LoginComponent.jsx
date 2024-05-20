@@ -41,25 +41,24 @@ const Login = () => {
   };
 
   return (
-    <Container style={{ width: '40%', border: '1px solid #ccc', padding: '20px', borderRadius: '10px', marginTop: '7%' }}>
+    <Container style={{ width: '30%', border: '1px solid #ccc', padding: '20px', borderRadius: '10px', marginTop: '7%' }}>
       <h2 className="mt-4 mb-4" style={{textAlign: 'center'}}>Login</h2>
       {successAlert && <Alert color="success">Login Successful!</Alert>}
       {errorAlert && <Alert color="danger">Invalid User Name or Password</Alert>}
       <Form onSubmit={handleLogin}>
         <Row form>
-          <Col md={9}>
-            <FormGroup>
+          <Col md={9} style={{width:'100%'}}>
+            <FormGroup style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
               <Label for="name">User Name:</Label>
-              <Input type="text" id="name" name="name" onChange={handleInputChange} placeholder="Enter Your Name"/>
+              <Input type="text" id="name" name="name" onChange={handleInputChange} placeholder="Enter Your Name" style={{width:'75%'}}/>
             </FormGroup>
           </Col>
         </Row>
         <Row form>
-          <Col md={9}>
-            <FormGroup>
-              <Label for="password">Password:</Label>
-              <Input
-                type="password" id="password" name="password" onChange={handleInputChange} placeholder="Enter Your Password"/>
+          <Col md={9} style={{width:'100%'}}>
+            <FormGroup style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Label for="password" style={{textWrap:'nowrap'}}>Password:</Label>
+              <Input type="password" id="password" name="password" onChange={handleInputChange} placeholder="Enter Your Password" style={{width:'75%'}}/>
             </FormGroup>
           </Col>
         </Row>

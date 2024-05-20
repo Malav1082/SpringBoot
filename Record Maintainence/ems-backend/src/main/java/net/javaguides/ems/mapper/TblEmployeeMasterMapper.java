@@ -2,31 +2,14 @@ package net.javaguides.ems.mapper;
 
 import net.javaguides.ems.dto.TblEmployeeMasterDto;
 import net.javaguides.ems.entity.TblEmployeeMaster;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
-public class TblEmployeeMasterMapper {
-    public static TblEmployeeMasterDto mapToTblEmployeeMaster(TblEmployeeMaster tblEmployeeMaster) {
-        return new TblEmployeeMasterDto(
-                tblEmployeeMaster.getMastCode(),
-                tblEmployeeMaster.getUser().getUserId(),
-                tblEmployeeMaster.getEmpID(),
-                tblEmployeeMaster.getEmpName(),
-                tblEmployeeMaster.getDesignation(),
-                tblEmployeeMaster.getDepartment(),
-                tblEmployeeMaster.getJoinedDate(),
-                tblEmployeeMaster.getSalary()
-        );
-    }
+@Mapper
+public interface TblEmployeeMasterMapper {
+    TblEmployeeMasterMapper INSTANCE = Mappers.getMapper(TblEmployeeMasterMapper.class);
 
-    public static TblEmployeeMaster mapToTblEmployeeMasterDto(TblEmployeeMaster tblEmployeeMaster) {
-        return new TblEmployeeMaster(
-                tblEmployeeMaster.getMastCode(),
-                tblEmployeeMaster.getUser(),
-                tblEmployeeMaster.getEmpID(),
-                tblEmployeeMaster.getEmpName(),
-                tblEmployeeMaster.getDesignation(),
-                tblEmployeeMaster.getDepartment(),
-                tblEmployeeMaster.getJoinedDate(),
-                tblEmployeeMaster.getSalary()
-        );
-    }
+    TblEmployeeMasterDto toDto(TblEmployeeMaster tblEmployeeMaster);
+
+    TblEmployeeMaster toEntity(TblEmployeeMasterDto tblEmployeeMasterDto);
 }

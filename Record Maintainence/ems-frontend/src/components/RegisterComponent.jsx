@@ -14,6 +14,7 @@ const Register = () => {
   const [passwordConfirmed, setPasswordConfirmed] = useState(true);
   const [successAlert, setSuccessAlert] = useState(false);
   const [errorAlert, setErrorAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -24,19 +25,26 @@ const Register = () => {
     e.preventDefault();
     if (passwordConfirmed) {
       try {
-        await postApi("/register", user, "Registered Successfully!", "Oops! Something went wrong.");
-        setSuccessAlert(true);
-        setTimeout(() => {
-          setSuccessAlert(false);
-          navigate("/login");
-        }, 2000);
+        const response = await postApi("/register", user, "Registered Successfully!", "Oops! Something went wrong.");
+        if (response.status === 200) {
+          setSuccessAlert(true);
+          setTimeout(() => {
+            setSuccessAlert(false);
+            navigate("/login");
+          }, 2000);
+        } else if (response.status === 409) {
+          setErrorMessage("User Already Exists!");
+          setErrorAlert(true);
+          setTimeout(() => setErrorAlert(false), 3000);
+        }
       } catch (error) {
         console.error("Registration Error:", error);
+        setErrorMessage("Oops! Something went wrong.");
         setErrorAlert(true);
         setTimeout(() => setErrorAlert(false), 3000);
       }
     } else {
-      alert("Password not matched!");
+      alert("Passwords do not match!");
     }
   };
 
@@ -44,7 +52,7 @@ const Register = () => {
     <Container>
       <h2 className="mt-4 mb-4">Register</h2>
       {successAlert && <Alert color="success">Registered Successfully!</Alert>}
-      {errorAlert && <Alert color="danger">Oops! Something went wrong.</Alert>}
+      {errorAlert && <Alert color="danger">{errorMessage}</Alert>}
       <Form onSubmit={handleRegister}>
         <FormGroup>
           <Label for="name">Name</Label>

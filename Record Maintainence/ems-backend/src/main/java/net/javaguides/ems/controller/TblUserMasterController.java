@@ -16,7 +16,7 @@ public class TblUserMasterController {
     public TblUserMasterService tblUserMasterService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody TblUserMaster tblUserMaster) {
+    public ResponseEntity<String> register(@RequestBody TblUserMaster tblUserMaster) {
         if (tblUserMasterService.getUserByE(tblUserMaster) == null) {
             TblUserMaster u = tblUserMasterService.addUser(tblUserMaster);
             return ResponseEntity
@@ -24,7 +24,7 @@ public class TblUserMasterController {
                     .body(u.getName() + " Registered Successfully");
         } else {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
+                    .status(HttpStatus.CONFLICT)  // Use 409 Conflict for resource conflict
                     .body("User Already Exists!");
         }
     }
