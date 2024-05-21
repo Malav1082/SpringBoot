@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Table, Button } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
+import { fetchEmployeeMasters, fetchEmployeeDetails, deleteEmployee } from '../services/Employee';
 
 const EmployeeTable = () => {
     const [employeeMasters, setEmployeeMasters] = useState([]);
@@ -10,33 +10,28 @@ const EmployeeTable = () => {
 
     useEffect(() => {
         document.title = "Employee Data";
-        fetchEmployeeMasters();
-        fetchEmployeeDetails();
+        fetchEmployeeData();
     }, []);
 
-    const fetchEmployeeMasters = async () => {
+    const fetchEmployeeData = async () => {
         try {
-            const res = await axios.get('/api/employee-master');
-            if (Array.isArray(res.data)) {
-                setEmployeeMasters(res.data);
+            const mastersRes = await fetchEmployeeMasters();
+            console.log("Masters Response:", mastersRes.data);
+            if (Array.isArray(mastersRes.data)) {
+                setEmployeeMasters(mastersRes.data);
             } else {
-                console.error("Expected an array but received:", res.data);
+                console.error("Expected an array but received:", mastersRes.data);
             }
-        } catch (error) {
-            console.error("Error fetching employee masters:", error);
-        }
-    };
 
-    const fetchEmployeeDetails = async () => {
-        try {
-            const res = await axios.get('/api/employee-details');
-            if (Array.isArray(res.data)) {
-                setEmployeeDetails(res.data);
+            const detailsRes = await fetchEmployeeDetails();
+            console.log("Details Response:", detailsRes.data);
+            if (Array.isArray(detailsRes.data)) {
+                setEmployeeDetails(detailsRes.data);
             } else {
-                console.error("Expected an array but received:", res.data);
+                console.error("Expected an array but received:", detailsRes.data);
             }
         } catch (error) {
-            console.error("Error fetching employee details:", error);
+            console.error("Error fetching employee data:", error);
         }
     };
 
@@ -50,7 +45,7 @@ const EmployeeTable = () => {
 
     const handleDelete = async (empID) => {
         try {
-            await axios.delete(`/api/employee/${empID}`);
+            await deleteEmployee(empID);
             setEmployeeMasters(employeeMasters.filter(emp => emp.empID !== empID));
         } catch (error) {
             console.error("Error deleting employee:", error);
@@ -80,27 +75,27 @@ const EmployeeTable = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {employeeMasters.map(emp => (
-                        <tr key={emp.empID}>
-                            <td>{emp.empID}</td>
-                            <td>{emp.empName}</td>
-                            <td>{emp.designation}</td>
-                            <td>{emp.department}</td>
-                            <td>{new Date(emp.joinedDate).toLocaleDateString()}</td>
-                            <td>{emp.salary}</td>
-                            <td>{employeeDetails.find(detail => detail.empID === emp.empID)?.addressLine1 || ''}</td>
-                            <td>{employeeDetails.find(detail => detail.empID === emp.empID)?.addressLine2 || ''}</td>
-                            <td>{employeeDetails.find(detail => detail.empID === emp.empID)?.city || ''}</td>
-                            <td>{employeeDetails.find(detail => detail.empID === emp.empID)?.state || ''}</td>
-                            <td>{employeeDetails.find(detail => detail.empID === emp.empID)?.country || ''}</td>
-                            <td>
-                                <Button color="warning" onClick={() => handleUpdate(emp.empID)}>Update</Button>
-                            </td>
-                            <td>
-                                <Button color="danger" onClick={() => handleDelete(emp.empID)}>Delete</Button>
-                            </td>
-                        </tr>
-                    ))}
+                    {employeeMasters.map((master) => {
+                        const detail = employeeDetails.find(d => d.empID === master.empID) || {};
+                        console.log("Master:", master, "Detail:", detail);
+                        return (
+                            <tr key={master.empID}>
+                                <td>{master.empID}</td>
+                                <td>{master.empName}</td>
+                                <td>{master.designation}</td>
+                                <td>{master.department}</td>
+                                <td>{master.joinedDate}</td>
+                                <td>{master.salary}</td>
+                                <td>{detail.addressLine1 || 'N/A'}</td>
+                                <td>{detail.addressLine2 || 'N/A'}</td>
+                                <td>{detail.city || 'N/A'}</td>
+                                <td>{detail.state || 'N/A'}</td>
+                                <td>{detail.country || 'N/A'}</td>
+                                <td><Button color="warning" onClick={() => handleUpdate(master.empID)}>Update</Button></td>
+                                <td><Button color="danger" onClick={() => handleDelete(master.empID)}>Delete</Button></td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </Table>
         </div>

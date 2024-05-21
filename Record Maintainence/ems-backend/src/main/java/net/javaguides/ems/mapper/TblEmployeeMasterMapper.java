@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 public interface TblEmployeeMasterMapper {
     TblEmployeeMasterMapper INSTANCE = Mappers.getMapper(TblEmployeeMasterMapper.class);
 
-    TblEmployeeMasterDto toDto(TblEmployeeMaster tblEmployeeMaster);
+    TblEmployeeMasterDto toDto(TblEmployeeMaster employeeMaster);
 
-    TblEmployeeMaster toEntity(TblEmployeeMasterDto tblEmployeeMasterDto);
+    TblEmployeeMaster toEntity(TblEmployeeMasterDto employeeMasterDto);
 }

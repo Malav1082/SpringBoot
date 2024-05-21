@@ -12,6 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TblEmployeeMasterDto {
+//    private Long userId;
     private String empID;
     private String empName;
     private String designation;

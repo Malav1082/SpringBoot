@@ -22,8 +22,10 @@ public class TblEmployeeMasterServiceImpl implements TblEmployeeMasterService {
     public TblEmployeeMasterDto createTblEmployeeMaster(TblEmployeeMasterDto tblEmployeeMasterDto) {
         TblEmployeeMaster tblEmployeeMaster = tblEmployeeMasterMapper.toEntity(tblEmployeeMasterDto);
         TblEmployeeMaster savedTblEmployeeMaster = tblEmployeeMasterRepository.save(tblEmployeeMaster);
+        System.out.println("tbl" +tblEmployeeMaster.toString());
+        System.out.println("saved" +savedTblEmployeeMaster.toString());
         return tblEmployeeMasterMapper.toDto(savedTblEmployeeMaster);
-    }
+            }
 
     @Override
     public TblEmployeeMasterDto getTblEmployeeMasterById(Long empId) {

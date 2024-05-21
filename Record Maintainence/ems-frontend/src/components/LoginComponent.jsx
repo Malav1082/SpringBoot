@@ -23,7 +23,9 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await postApi("/login", user, "Login Successful!", "Invalid Credentials");
-      if (response && response.status === 200 && response.data.includes("Welcome")) {
+      if (response && response.status === 200) {
+        console.log(response)
+        sessionStorage.setItem("user", JSON.stringify(response.data))
         setSuccessAlert(true);
         setTimeout(() => {
           setSuccessAlert(false);
@@ -46,7 +48,7 @@ const Login = () => {
       {successAlert && <Alert color="success">Login Successful!</Alert>}
       {errorAlert && <Alert color="danger">Invalid User Name or Password</Alert>}
       <Form onSubmit={handleLogin}>
-        <Row form>
+        <Row>
           <Col md={9} style={{width:'100%'}}>
             <FormGroup style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
               <Label for="name">User Name:</Label>
@@ -54,7 +56,7 @@ const Login = () => {
             </FormGroup>
           </Col>
         </Row>
-        <Row form>
+        <Row>
           <Col md={9} style={{width:'100%'}}>
             <FormGroup style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
               <Label for="password" style={{textWrap:'nowrap'}}>Password:</Label>
@@ -62,7 +64,7 @@ const Login = () => {
             </FormGroup>
           </Col>
         </Row>
-        <Row form className="mt-3">
+        <Row className="mt-3">
           <Col md={6}>
             <Button type="submit" color="primary" outline className="w-100">
               Login
@@ -74,7 +76,7 @@ const Login = () => {
             </Button>
           </Col>
         </Row>
-        <Row form className="mt-3">
+        <Row className="mt-3">
           <Col md={6}>
             <Button color="warning" outline className="w-100" onClick={() => navigate("/forgot-password")}>
               Forgot Password

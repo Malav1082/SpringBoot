@@ -1,7 +1,6 @@
 package net.javaguides.ems.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import net.javaguides.ems.dto.TblEmployeeMasterDto;
 import net.javaguides.ems.service.TblEmployeeMasterService;
 import org.springframework.http.HttpStatus;
@@ -12,14 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/employee-master")
-
+@AllArgsConstructor
 public class TblEmployeeMasterController {
 
     private final TblEmployeeMasterService employeeMasterService;
-
-    public TblEmployeeMasterController(TblEmployeeMasterService employeeMasterService) {
-        this.employeeMasterService = employeeMasterService;
-    }
 
     @PostMapping
     public ResponseEntity<TblEmployeeMasterDto> createEmployee(@RequestBody TblEmployeeMasterDto employeeMasterDto) {

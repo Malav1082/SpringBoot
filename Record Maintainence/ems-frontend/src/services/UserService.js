@@ -7,7 +7,7 @@ export const postApi = async (url, data, succ, err) => {
   console.log("data", data);
   try {
     const response = await axios.post(base_url + url, data);
-    console.log("success", response);
+    console.log("user", response);
     toast.success(succ, {
       //   position: "top-center",
     });

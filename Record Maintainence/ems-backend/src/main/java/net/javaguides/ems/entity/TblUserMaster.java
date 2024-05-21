@@ -28,6 +28,4 @@ public class TblUserMaster {
     @Column(name = "Password", nullable = false)
     private String password;
 
-    @Transient
-    private String confirmPassword;
 }

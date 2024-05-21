@@ -31,10 +31,10 @@ public class TblUserMasterController {
 
     //    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody TblUserMaster tblUserMaster) {
+    public ResponseEntity<?> login(@RequestBody TblUserMaster tblUserMaster) {
         TblUserMaster user = tblUserMasterService.getUserByEP(tblUserMaster.getName(), tblUserMaster.getPassword());
         if (user != null) {
-            return ResponseEntity.ok("Welcome " + tblUserMaster.getName());
+            return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Credentials!");
         }
